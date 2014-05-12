@@ -4,6 +4,8 @@ The Arbitrary Settings module is something of an oddity. Unlike the other module
 Form Tools: all it does it let you add a section at the bottom of the Settings -> Main tab, where you can define you own
 settings for storage in the Form Tools database. What do those settings contain and do? Anything you want.
 
+For further information and examples, check out the documentation at the link below.
+
 ### Documentation
 
 [http://modules.formtools.org/arbitrary_settings/](http://modules.formtools.org/arbitrary_settings/)
