@@ -10,7 +10,7 @@ For further information and examples, check out the documentation at the link be
 
 [http://modules.formtools.org/arbitrary_settings/](http://modules.formtools.org/arbitrary_settings/)
 
-### Further info
+### Form Tools Extensions
 
 For further information about Form Tools extensions, check out the following link:
 [http://www.formtools.org/extensions.php](http://www.formtools.org/extensions.php)
