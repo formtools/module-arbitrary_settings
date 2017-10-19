@@ -1,22 +1,31 @@
 <?php
 
 require("../../global/library.php");
-ft_init_module_page();
-$sid = ft_load_module_field("arbitrary_settings", "sid", "sid");
 
-if (isset($_POST["update"]))
-  list($g_success, $g_message) = as_update_setting($sid, $_POST);
+use FormTools\Modules;
+use FormTools\Modules\ArbitrarySettings\Fields;
 
-$setting_info = as_get_setting($sid);
+$module = Modules::initModulePage("admin");
+$L = $module->getLangStrings();
+
+$sid = Modules::loadModuleField("arbitrary_settings", "sid", "sid");
+
+$success = true;
+$message = "";
+if (isset($_POST["update"])) {
+    list($success, $message) = Fields::updateSetting($sid, $_POST, $L);
+}
+$setting_info = Fields::getSetting($sid);
 $num_options = count($setting_info["options"]);
 
-// ------------------------------------------------------------------------------------------------
+$page_vars = array(
+    "g_success" => $success,
+    "g_message" => $message,
+    "head_title" => $L["phrase_edit_setting"],
+    "setting_info" => $setting_info,
+    "js_messages" => array("word_delete")
+);
 
-$page_vars = array();
-$page_vars["head_title"] = $L["phrase_edit_setting"];
-$page_vars["head_string"] = "<script type=\"text/javascript\" src=\"global/scripts/field_options.js\"></script>";
-$page_vars["setting_info"] = $setting_info;
-$page_vars["js_messages"] = array("word_delete");
 $page_vars["head_js"] =<<< EOF
 var rules = [];
 rules.push("required,setting_label,{$L["validation_no_setting_label"]}");
@@ -35,4 +44,4 @@ page_ns.delete_field = function(sid) {
 EOF;
 
 
-ft_display_module_page("templates/edit.tpl", $page_vars);
+$module->displayPage("templates/edit.tpl", $page_vars);

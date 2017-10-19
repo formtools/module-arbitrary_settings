@@ -1,5 +1,4 @@
 <?php
 
-require_once(dirname(__FILE__) . "/global/code/fields.php");
-require_once(dirname(__FILE__) . "/global/code/hooks.php");
-require_once(dirname(__FILE__) . "/global/code/module.php");
+require_once(__DIR__ . "/code/Fields.class.php");
+require_once(__DIR__ . "/code/Module.class.php");

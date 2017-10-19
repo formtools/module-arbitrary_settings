@@ -1,38 +1,44 @@
 <?php
 
 require_once("../../global/library.php");
-ft_init_module_page();
 
-$folder = dirname(__FILE__);
-require_once("$folder/library.php");
+use FormTools\Core;
+use FormTools\General;
+use FormTools\Modules;
+use FormTools\Modules\ArbitrarySettings\Fields;
 
-if (isset($_GET["delete"]))
-  list($g_success, $g_message) = as_delete_setting($_GET["delete"]);
+$module = Modules::initModulePage("admin");
+$L = $module->getLangStrings();
+$LANG = Core::$L;
 
-if (isset($_POST["add_field"]))
-{
-  header("location: add.php");
-  exit;
+$success = true;
+$message = "";
+if (isset($_GET["delete"])) {
+    list($success, $message) = Fields::deleteSetting($_GET["delete"], $L);
 }
-else if (isset($_POST["update_order"]))
-{
-  list($g_success, $g_message) = as_update_settings_order($_POST);
+if (isset($_POST["add_field"])) {
+    header("location: add.php");
+    exit;
+} else if (isset($_POST["update_order"])) {
+    list($success, $message) = Fields::updateSettingsOrder($_POST, $L);
 }
 
 $num_fields_per_page = 10;
 
-$page = ft_load_module_field("extended_client_fields", "page", "extended_client_fields_page", 1);
-$info = as_get_settings($page);
+$page = Modules::loadModuleField("extended_client_fields", "page", "extended_client_fields_page", 1);
+$info = Fields::getSettings($page);
 $results     = $info["results"];
 $num_results = $info["num_results"];
 
-// ------------------------------------------------------------------------------------------------
+$page_vars = array(
+    "g_success" => $success,
+    "g_message" => $message,
+    "results" => $results,
+    "head_title" => $L["module_name"],
+    "pagination" => General::getPageNav($num_results, $num_fields_per_page, $page, ""),
+    "js_messages" => array("word_edit")
+);
 
-$page_vars = array();
-$page_vars["results"] = $results;
-$page_vars["head_title"] = $L["module_name"];
-$page_vars["pagination"] = ft_get_page_nav($num_results, $num_fields_per_page, $page, "");
-$page_vars["js_messages"] = array("word_edit");
 $page_vars["head_js"] =<<< EOF
 var page_ns = {};
 page_ns.delete_dialog = $("<div></div>");
@@ -58,4 +64,4 @@ page_ns.delete_field = function(client_field_id) {
 }
 EOF;
 
-ft_display_module_page("templates/index.tpl", $page_vars);
+$module->displayPage("templates/index.tpl", $page_vars);

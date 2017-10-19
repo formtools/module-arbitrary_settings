@@ -27,7 +27,7 @@
     <tr>
       <td valign="top">{$L.phrase_setting_identifier}</td>
       <td>
-        <input type="text" name="setting_identifier" style="width:200px" maxlength="100" value="{$setting_info.setting_identifier|escape}" />
+        <input type="text" name="setting_identifier" style="width:200px" maxlength="100" value="" />
         <div class="hint">{$L.text_setting_identifier_hint}</div>
       </td>
     </tr>
@@ -64,28 +64,19 @@
         <tr>
           <td width="140" valign="top">{$L.phrase_field_option_source}</td>
           <td>
-                <table cellspacing="1" cellpadding="0" id="field_options_table" class="list_table" style="width: 448px">
-                <tbody>
-                  <tr>
-                    <th width="40"> </th>
-                    <th>{$LANG.phrase_display_text}</th>
-                    <th class="del"></th>
-                  </tr>
-                  {foreach from=$field_info.options item=option name=row}
-                    {assign var=count value=$smarty.foreach.row.iteration}
-                      <tr id="row_{$count}">
-                        <td class="medium_grey" align="center" id="field_option_{$count}_order">{$count}</td>
-                        <td><input type="text" style="width:99%" name="field_option_text_{$count}" value="{$option.option_text|escape}" /></td>
-                        <td class="del"><a href="#" onclick="as_ns.delete_field_option({$count})"></a></td>
-                      </tr>
-                    {/foreach}
-                  </tbody>
-                </table>
+            <table cellspacing="1" cellpadding="0" id="field_options_table" class="list_table" style="width: 448px">
+            <tbody>
+              <tr>
+                <th width="40"> </th>
+                <th>{$LANG.phrase_display_text}</th>
+                <th class="del"></th>
+              </tr>
+            </tbody>
+            </table>
 
-                <div>
-                  <a href="#" onclick="as_ns.add_field_option(null, null)">{$LANG.phrase_add_row}</a>
-                </div>
-
+            <div>
+              <a href="#" onclick="as_ns.add_field_option(null, null)">{$LANG.phrase_add_row}</a>
+            </div>
           </td>
         </tr>
       </table>

@@ -1,15 +1,26 @@
 <?php
 
 require("../../global/library.php");
-ft_init_module_page();
 
-if (isset($_POST["add"]))
-  list($g_success, $g_message) = as_add_field($_POST);
+use FormTools\Modules;
+use FormTools\Modules\ArbitrarySettings\Fields;
 
-$page_vars = array();
-$page_vars["head_title"] = $L["phrase_add_setting"];
-$page_vars["head_string"] = "<script src=\"global/scripts/field_options.js\"></script>";
-$page_vars["js_messages"] = array("word_delete");
+$module = Modules::initModulePage("admin");
+$L = $module->getLangStrings();
+
+$success = true;
+$message = "";
+if (isset($_POST["add"])) {
+    list($success, $message) = Fields::addField($_POST, $L);
+}
+
+$page_vars = array(
+    "g_success" => $success,
+    "g_message" => $message,
+    "head_title" => $L["phrase_add_setting"],
+    "js_messages" => array("word_delete")
+);
+
 $page_vars["head_js"] =<<< EOF
 var rules = [];
 rules.push("required,setting_label,{$L["validation_no_setting_label"]}");
@@ -26,4 +37,4 @@ $(function() {
 });
 EOF;
 
-ft_display_module_page("templates/add.tpl", $page_vars);
+$module->displayPage("templates/add.tpl", $page_vars);

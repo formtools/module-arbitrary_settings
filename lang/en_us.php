@@ -16,6 +16,7 @@ $L["phrase_edit_setting"] = "Edit Setting";
 $L["phrase_how_to_use"] = "How to Use";
 $L["phrase_settings_title"] = "Settings Title";
 $L["phrase_setting_identifier"] = "Setting Identifier";
+$L["phrase_field_option_source"] = "Field Option Source";
 
 $L["validation_no_setting_label"] = "Please enter the setting label.";
 $L["validation_no_field_type"] = "Please enter the field type.";
