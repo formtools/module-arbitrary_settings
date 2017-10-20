@@ -6,6 +6,7 @@ namespace FormTools\Modules\ArbitrarySettings;
 use FormTools\Core;
 use FormTools\General;
 use FormTools\Modules;
+use FormTools\Settings;
 use Smarty;
 use PDO, PDOException;
 
@@ -20,13 +21,7 @@ class Fields
         $db = Core::$db;
 
         // get the next field order
-        $db->query("SELECT setting_order FROM {PREFIX}module_arbitrary_settings ORDER BY setting_order DESC LIMIT 1");
-        $result = $db->execute();
-
-        $next_order = 1;
-        if (!empty($result)) {
-            $next_order = $result["setting_order"] + 1;
-        }
+        $next_order = self::getNextSettingId();
 
         $db->query("
             INSERT INTO {PREFIX}module_arbitrary_settings (setting_label, setting_identifier, field_type, field_orientation, setting_order)
@@ -256,44 +251,6 @@ class Fields
 
 
     /**
-     * This function handles the actual field generation for the form.
-     */
-    public static function as_display_settings($location, $template_vars)
-    {
-        $root_dir = Core::getRootDir();
-
-        // okay! We have some stuff to show. Grab the section title
-        $module_settings = Modules::getModuleSettings("", "arbitrary_settings");
-
-        $smarty = new Smarty();
-        $smarty->setTemplateDir("$root_dir/modules/arbitrary_settings/smarty/");
-        $smarty->setCompileDir("$root_dir/themes/default/cache/");
-
-        $settings = self::getSettings(1, "all");
-        if (count($settings["results"]) == 0) {
-            return;
-        }
-
-        $results = array();
-        foreach ($settings["results"] as $setting_info) {
-            $setting_identifier = $setting_info["setting_identifier"];
-            if (isset($module_settings[$setting_identifier])) {
-                $setting_info["content"] = $module_settings[$setting_identifier];
-                if (in_array($setting_info["field_type"], array("checkboxes", "multi-select"))) {
-                    $setting_info["content"] = explode("|", $module_settings[$setting_identifier]);
-                }
-            }
-            $results[] = $setting_info;
-        }
-
-        $smarty->assign("title", $module_settings["settings_title"]);
-        $smarty->assign("settings", $results);
-
-        echo $smarty->fetch("$root_dir/modules/arbitrary_settings/smarty_plugins/section_html.tpl");
-    }
-
-
-    /**
      * Called on the main fields page. This updates the orders of the entire list of
      * Extended Client Fields. Note: the option to sort the Fields only appears if there is
      * 2 or more fields.
@@ -395,5 +352,22 @@ class Fields
         return $db->fetch(PDO::FETCH_COLUMN);
     }
 
+
+    public static function getNextSettingId()
+    {
+        $db = Core::$db;
+
+        $db->query("SELECT setting_order FROM {PREFIX}module_arbitrary_settings ORDER BY setting_order DESC LIMIT 1");
+        $db->execute();
+
+        $last_order = $db->fetch(PDO::FETCH_COLUMN);
+
+        $next_order = 1;
+        if (!empty($last_order)) {
+            $next_order = $last_order + 1;
+        }
+
+        return $next_order;
+    }
 }
 

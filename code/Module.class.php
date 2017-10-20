@@ -7,8 +7,9 @@ use FormTools\Core;
 use FormTools\General;
 use FormTools\Hooks;
 use FormTools\Module as FormToolsModule;
+use FormTools\Modules;
 use FormTools\Settings;
-use PDOException;
+use PDOException, Smarty;
 
 
 class Module extends FormToolsModule
@@ -109,6 +110,78 @@ class Module extends FormToolsModule
         Hooks::registerHook("template", "arbitrary_settings", "admin_settings_main_tab_bottom", "", "displaySettings");
         Hooks::registerHook("code", "arbitrary_settings", "end", "FormTools\\Settings::updateMainSettings", "saveSettings");
     }
+
+
+    /**
+     * This function handles the actual field generation for the form.
+     */
+    public function displaySettings($location, $template_vars)
+    {
+        $root_dir = Core::getRootDir();
+
+        // okay! We have some stuff to show. Grab the section title
+        $module_settings = Modules::getModuleSettings("", "arbitrary_settings");
+
+        $smarty = new Smarty();
+        $smarty->setTemplateDir("$root_dir/modules/arbitrary_settings/smarty/");
+        $smarty->setCompileDir("$root_dir/themes/default/cache/");
+
+        $settings = Fields::getSettings(1, "all");
+        if (count($settings["results"]) == 0) {
+            return;
+        }
+
+        $results = array();
+        foreach ($settings["results"] as $setting_info) {
+            $setting_identifier = $setting_info["setting_identifier"];
+            if (isset($module_settings[$setting_identifier])) {
+                $setting_info["content"] = $module_settings[$setting_identifier];
+                if (in_array($setting_info["field_type"], array("checkboxes", "multi-select"))) {
+                    $setting_info["content"] = explode("|", $module_settings[$setting_identifier]);
+                }
+            }
+            if (!isset($setting_info["content"])) {
+                if (in_array($setting_info["field_type"], array("checkboxes", "multi-select"))) {
+                    $setting_info["content"] = array();
+                } else {
+                    $setting_info["content"] = "";
+                }
+            }
+            $results[] = $setting_info;
+        }
+
+        $smarty->assign("title", $module_settings["settings_title"]);
+        $smarty->assign("settings", $results);
+
+        echo $smarty->fetch("$root_dir/modules/arbitrary_settings/smarty_plugins/section_html.tpl");
+    }
+
+
+    public function saveSettings($vars)
+    {
+        $settings = Fields::getSettings(1, "all");
+        $settings_to_update = array();
+
+        foreach ($settings["results"] as $setting_info) {
+            $sid                = $setting_info["sid"];
+            $setting_identifier = $setting_info["setting_identifier"];
+
+            if (!isset($_POST["arbitrary_setting_{$sid}"])) {
+                $value = "";
+            } else {
+                $value = $_POST["arbitrary_setting_{$sid}"];
+                if (is_array($_POST["arbitrary_setting_{$sid}"])) {
+                    $value = implode("|", $_POST["arbitrary_setting_{$sid}"]);
+                }
+            }
+            $settings_to_update[$setting_identifier] = $value;
+        }
+
+        if (!empty($settings_to_update)) {
+            Settings::set($settings_to_update, "arbitrary_settings");
+        }
+    }
+
 
     /**
      * This function is attached to the admin_edit_view_client_map_filter_dropdown hook. It populates the
