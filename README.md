@@ -1,4 +1,4 @@
-## module-arbitrary_settings
+## Arbitrary Settings module
 
 The Arbitrary Settings module is something of an oddity. Unlike the other modules, it doesn't directly DO anything with
 Form Tools: all it does it let you add a section at the bottom of the Settings -> Main tab, where you can define you own
@@ -6,9 +6,9 @@ settings for storage in the Form Tools database. What do those settings contain 
 
 ### Documentation
 
-[http://modules.formtools.org/arbitrary_settings/](http://modules.formtools.org/arbitrary_settings/)
+[https://docs.formtools.org/modules/arbitrary_settings/](https://docs.formtools.org/modules/arbitrary_settings/)
 
-### Further info
+### Form Tools Extensions
 
-For further information about Form Tools extensions, check out the following link:
-[http://www.formtools.org/extensions.php](http://www.formtools.org/extensions.php)
+For further information about Form Tools modules, check out:
+[https://modules.formtools.org](https://modules.formtools.org)
