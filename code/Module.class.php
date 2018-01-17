@@ -42,6 +42,7 @@ class Module extends FormToolsModule
         $success = true;
         $message = "";
         try {
+
             $db->beginTransaction();
             $db->query("
                 CREATE TABLE {PREFIX}module_arbitrary_settings (
@@ -101,6 +102,12 @@ class Module extends FormToolsModule
         $db->execute();
 
         return array(true, "");
+    }
+
+
+    public function upgrade($module_id, $old_module_version)
+    {
+        $this->resetHooks();
     }
 
 
