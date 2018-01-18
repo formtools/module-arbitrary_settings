@@ -9,9 +9,13 @@ code.
 It just provides a simple interface to allow storage of arbitrary data that's controlled by the Form Tools administrator.
 
 
-### Documentation and Links
+### Documentation
 
-- [Arbitrary Settings module documentation](https://docs.formtools.org/modules/arbitrary_settings/)
+- [https://docs.formtools.org/modules/arbitrary_settings/](https://docs.formtools.org/modules/arbitrary_settings/)
+
+
+### Other Links
+
 - [Available Form Tools modules](https://modules.formtools.org/)
 - [About Form Tools modules](https://docs.formtools.org/userdoc/modules/) 
 - [Installation instructions](https://docs.formtools.org/userdoc/modules/installing/)
