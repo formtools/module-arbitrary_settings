@@ -5,10 +5,7 @@ namespace FormTools\Modules\ArbitrarySettings;
 
 use FormTools\Core;
 use FormTools\General;
-use FormTools\Modules;
-use FormTools\Settings;
-use Smarty;
-use PDO, PDOException;
+use PDO, Exception;
 
 
 class Fields
@@ -74,8 +71,6 @@ class Fields
         $db = Core::$db;
 
         try {
-            $db->beginTransaction();
-
             $db->query("
                 UPDATE {PREFIX}module_arbitrary_settings
                 SET     setting_label = :setting_label,
@@ -118,10 +113,7 @@ class Fields
                     $db->execute();
                 }
             }
-
-            $db->processTransaction();
-        } catch (PDOException $e) {
-            $db->rollbackTransaction();
+        } catch (Exception $e) {
             return array(false, $L["notify_field_not_updated"] . $e->getMessage());
         }
 

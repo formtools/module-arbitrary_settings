@@ -9,7 +9,7 @@ use FormTools\Hooks;
 use FormTools\Module as FormToolsModule;
 use FormTools\Modules;
 use FormTools\Settings;
-use PDOException, Smarty;
+use Exception, Smarty;
 
 
 class Module extends FormToolsModule
@@ -19,8 +19,8 @@ class Module extends FormToolsModule
     protected $author = "Ben Keen";
     protected $authorEmail = "ben.keen@gmail.com";
     protected $authorLink = "https://formtools.org";
-    protected $version = "2.0.1";
-    protected $date = "2017-11-07";
+    protected $version = "2.0.2";
+    protected $date = "2018-01-27";
     protected $originLanguage = "en_us";
     protected $jsFiles = array(
         "{MODULEROOT}/scripts/field_options.js"
@@ -41,9 +41,8 @@ class Module extends FormToolsModule
 
         $success = true;
         $message = "";
-        try {
 
-            $db->beginTransaction();
+        try {
             $db->query("
                 CREATE TABLE {PREFIX}module_arbitrary_settings (
                     sid mediumint(8) unsigned NOT NULL auto_increment,
@@ -68,10 +67,7 @@ class Module extends FormToolsModule
             $db->execute();
 
             Settings::set(array("settings_title" => "ARBITRARY SETTINGS"), "arbitrary_settings");
-
-            $db->processTransaction();
-        } catch (PDOException $e) {
-            $db->rollbackTransaction();
+        } catch (Exception $e) {
             $L = $this->getLangStrings();
             $success = false;
             $message = General::evalSmartyString($L["notify_problem_installing"], array("error" => $e->getMessage()));
@@ -113,7 +109,7 @@ class Module extends FormToolsModule
 
     public function resetHooks()
     {
-        Hooks::unregisterModuleHooks("arbitrary_settings");
+        $this->clearHooks();
         Hooks::registerHook("template", "arbitrary_settings", "admin_settings_main_tab_bottom", "", "displaySettings");
         Hooks::registerHook("code", "arbitrary_settings", "end", "FormTools\\Settings::updateMainSettings", "saveSettings");
     }

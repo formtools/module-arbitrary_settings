@@ -17,6 +17,8 @@ if (isset($_POST["update"])) {
 }
 
 $page_vars = array(
+    "g_success" => $success,
+    "g_message" => $message,
     "head_title" => $L["module_name"],
     "settings" => $module->getSettings()
 );

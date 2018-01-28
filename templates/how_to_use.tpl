@@ -22,7 +22,7 @@
     <div style="border: 1px solid #666666; padding: 3px; height: 90px; overflow: hidden" class="margin_bottom_large">
         <textarea name="code_field" id="code_field" style="width:100%; height: 90px"><?php
 require_once("{$g_root_dir}/global/library.php");
-$settings = Modules::getModuleSettings("", "arbitrary_settings");
+$settings = FormTools\Modules::getModuleSettings("", "arbitrary_settings");
 ?></textarea>
     </div>
 
